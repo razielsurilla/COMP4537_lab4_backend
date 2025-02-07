@@ -1,5 +1,5 @@
 const ERROR_MESSAGES = {
-    INVALID_CALL: 'Invalid API call',
+    INVALID_API_CALL: 'Invalid API call',
     WORD_DOES_NOT_EXIST: 'Word not found.',
     WORD_ALREADY_EXISTS: 'Word already exists.',
 };
