@@ -16,16 +16,8 @@ class Dictionary {
         return this.dictionary[word] || null;
     }
 
-    has_word(word) {
-        return word in this.dictionary;
-    }
-
-    delete_word(word) {
-        if (this.has_word(word)) {
-            delete this.dictionary[word];
-            return true;
-        }
-        return false;
+    get_num_entries() {
+        return Object.keys(this.dictionary).length;
     }
 }
 

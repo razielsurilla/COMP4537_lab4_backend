@@ -3,11 +3,13 @@ const url = require('url');
 
 const MESSAGES = require('./lang/en/en');
 const Dictionary = require('./dictionary');
+const RequestTracker = require('./request_tracker');
 
 class Server {
     constructor(port) {
         this.port = port;
         this.dictionary = new Dictionary();
+        this.request_tracker = new RequestTracker();
     }
 
     start() {
@@ -29,6 +31,7 @@ class Server {
             }
 
             if (req.method === 'GET') {
+                this.request_tracker.new_request();
                 const { definition, error } = this.get_definition(req_url);
                 if (error) {
                     res.writeHead(404, { 'Content-Type': 'text/plain' });
@@ -41,6 +44,7 @@ class Server {
             }
 
             if (req.method === 'POST') {
+                this.request_tracker.new_request();
                 let body = '';
                 req.on('data', (chunk) => {
                     body += chunk;
@@ -60,7 +64,9 @@ class Server {
                         }
 
                         res.writeHead(201, { 'Content-Type': 'text/plain' });
-                        res.end(`${word}: ${definition}`);
+                        res.write(MESSAGES.USER_MESSAGES.TOTAL_NUMER_OF_WORDS(this.dictionary.get_num_entries()) + '\n');
+                        res.write(MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUEST(this.request_tracker.get_requests()));
+                        res.end();
                     } catch (error) {
                         res.writeHead(400, { 'Content-Type': 'text/plain' });
                         res.end(MESSAGES.ERROR_MESSAGES.INVALID_REQUEST);
