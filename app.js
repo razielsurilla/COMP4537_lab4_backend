@@ -15,14 +15,14 @@ class Server {
             const req_url = url.parse(req.url, true);
 
             if (!req_url.pathname.startsWith('/api/definitions')) {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.end(MESSAGES.ERROR_MESSAGES.INVALID_API_CALL);
                 return;
             }
 
             const sub_url = req_url.pathname.replace('/api/definitions', '');
             if (sub_url && sub_url !== '/') {
-                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.write(MESSAGES.ERROR_MESSAGES.INVALID_API_CALL);
                 res.end();
                 return;
@@ -30,13 +30,12 @@ class Server {
 
             if (req.method === 'GET') {
                 const { definition, error } = this.get_definition(req_url);
-                console.log(definition);
                 if (error) {
-                    res.writeHead(404, { 'Content-Type': 'text/html' });
+                    res.writeHead(404, { 'Content-Type': 'text/plain' });
                     res.end(MESSAGES.ERROR_MESSAGES.WORD_DOES_NOT_EXIST);
                     return;
                 }
-                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.writeHead(200, { 'Content-Type': 'text/plain' });
                 res.end(definition);
                 return;
             }
@@ -70,7 +69,7 @@ class Server {
                 return;
             }
 
-            res.writeHead(405, { 'Content-Type': 'text/html' });
+            res.writeHead(405, { 'Content-Type': 'text/plain' });
             res.end(MESSAGES.ERROR_MESSAGES.METHOD_NOT_ALLOWED);
 
         }).listen(this.port, () => {
