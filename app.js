@@ -17,6 +17,7 @@ class Server {
             const req_url = url.parse(req.url, true);
 
             if (!req_url.pathname.startsWith('/api/definitions')) {
+                // 400: incorrect api all syntax
                 res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.end(MESSAGES.ERROR_MESSAGES.INVALID_API_CALL);
                 return;
@@ -24,7 +25,8 @@ class Server {
 
             const sub_url = req_url.pathname.replace('/api/definitions', '');
             if (sub_url && sub_url !== '/') {
-                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                // 400: incorrect api all syntax
+                res.writeHead(400, { 'Content-Type': 'text/plain' });
                 res.write(MESSAGES.ERROR_MESSAGES.INVALID_API_CALL);
                 res.end();
                 return;
@@ -34,10 +36,12 @@ class Server {
                 this.request_tracker.new_request();
                 const { definition, error } = this.get_definition(req_url);
                 if (error) {
+                    // 404: not found, word is not in the dictionary.
                     res.writeHead(404, { 'Content-Type': 'text/plain' });
                     res.end(MESSAGES.ERROR_MESSAGES.WORD_DOES_NOT_EXIST);
                     return;
                 }
+                // 200: successful request
                 res.writeHead(200, { 'Content-Type': 'text/plain' });
                 res.end(definition);
                 return;
@@ -58,23 +62,33 @@ class Server {
 
                         const add_word_result = this.dictionary.add_definition(word, definition);
                         if (!add_word_result) {
+                            // 400: bad request, word already exists
                             res.writeHead(400, { 'Content-Type': 'text/plain' });
                             res.end(MESSAGES.ERROR_MESSAGES.WORD_ALREADY_EXISTS);
                             return;
                         }
 
+                        // 201: resource created
                         res.writeHead(201, { 'Content-Type': 'text/plain' });
                         res.write(MESSAGES.USER_MESSAGES.TOTAL_NUMER_OF_WORDS(this.dictionary.get_num_entries()) + '\n');
                         res.write(MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUEST(this.request_tracker.get_requests()));
                         res.end();
                     } catch (error) {
-                        res.writeHead(400, { 'Content-Type': 'text/plain' });
-                        res.end(MESSAGES.ERROR_MESSAGES.INVALID_REQUEST);
+                        if (error instanceof SyntaxError) {
+                            // 422: JSON is not correctly formatted
+                            res.writeHead(422, { 'Content-Type': 'text/plain' });
+                            res.end(MESSAGES.ERROR_MESSAGES.INVALID_JSON);
+                        } else {
+                            // 500: internal Server Error
+                            res.writeHead(500, { 'Content-Type': 'text/plain' });
+                            res.end(MESSAGES.ERROR_MESSAGES.SERVER_ERROR);
+                        }
                     }
                 });
                 return;
             }
 
+            // 405: method not allowed.
             res.writeHead(405, { 'Content-Type': 'text/plain' });
             res.end(MESSAGES.ERROR_MESSAGES.METHOD_NOT_ALLOWED);
 
