@@ -1,0 +1,16 @@
+{
+  "name": "comp4537_lab4_backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "entry.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node entry.js"
+  },
+  "keywords": [],
+  "author": "Raziel Surilla",
+  "license": "ISC",
+  "engines": {
+    "node": "18.18.2"
+  }
+}

@@ -74,15 +74,9 @@ class Server {
                         res.write(MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUEST(this.request_tracker.get_requests()));
                         res.end();
                     } catch (error) {
-                        if (error instanceof SyntaxError) {
-                            // 422: JSON is not correctly formatted
-                            res.writeHead(422, { 'Content-Type': 'text/plain' });
-                            res.end(MESSAGES.ERROR_MESSAGES.INVALID_JSON);
-                        } else {
-                            // 500: internal Server Error
-                            res.writeHead(500, { 'Content-Type': 'text/plain' });
-                            res.end(MESSAGES.ERROR_MESSAGES.SERVER_ERROR);
-                        }
+                        // 500: internal Server Error
+                        res.writeHead(500, { 'Content-Type': 'text/plain' });
+                        res.end(MESSAGES.ERROR_MESSAGES.SERVER_ERROR);
                     }
                 });
                 return;

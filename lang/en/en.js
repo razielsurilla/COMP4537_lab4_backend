@@ -3,7 +3,6 @@ const ERROR_MESSAGES = {
     WORD_DOES_NOT_EXIST: 'Word not found.',
     WORD_ALREADY_EXISTS: 'Word already exists.',
     METHOD_NOT_ALLOWED: 'Invalid API method.',
-    INVALID_JSON: 'JSON in request body is improperly formatted',
     SERVER_ERROR: 'There\'s something wrong with the server. Sorry.',
 };
 const USER_MESSAGES = {
