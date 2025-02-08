@@ -15,7 +15,8 @@ class Server {
     start() {
         http.createServer((req, res) => {
             const req_url = url.parse(req.url, true);
-
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            
             if (!req_url.pathname.startsWith('/api/definitions')) {
                 // 400: incorrect api all syntax
                 res.writeHead(404, { 'Content-Type': 'text/plain' });
