@@ -7,7 +7,7 @@ const RequestTracker = require('./request_tracker');
 
 class Server {
     constructor(port) {
-        this.port = port;
+        this.port = process.env.PORT || port;
         this.dictionary = new Dictionary();
         this.request_tracker = new RequestTracker();
     }
