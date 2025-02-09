@@ -19,6 +19,10 @@ class Dictionary {
     get_num_entries() {
         return Object.keys(this.dictionary).length;
     }
+
+    get_all_entries() {
+        return this.dictionary;
+    }
 }
 
 module.exports = Dictionary;
