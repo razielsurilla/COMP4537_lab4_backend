@@ -79,8 +79,14 @@ class Server {
                         // handle invalid input (disallow numbers)
                         if (/\d/.test(word) || /\d/.test(definition)) {
                             // 400: bad request, word or definition contains a digit.
+                            let num_entries = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_WORDS(this.dictionary.get_num_entries());
+                            let request_num = MESSAGES.USER_MESSAGES.TOTAL_NUMBER_OF_REQUESTS(this.request_tracker.get_requests());
                             res.writeHead(400, {'Content-Type': 'application/json'});
-                            return res.end(JSON.stringify({message: MESSAGES.ERROR_MESSAGES.INVALID_INPUT }));
+                            return res.end(JSON.stringify({
+                                message: MESSAGES.ERROR_MESSAGES.INVALID_INPUT,
+                                total_number_of_words: num_entries,
+                                total_number_of_requests: request_num
+                            }));
                         }
 
                         const add_word_result = this.dictionary.add_definition(word, definition);
